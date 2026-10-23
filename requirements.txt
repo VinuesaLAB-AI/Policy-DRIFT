@@ -1,0 +1,16 @@
+# Python 3.11. Dedalus 2 and an MPI-enabled mpi4py are installed from conda-forge first:
+#   conda install -c conda-forge dedalus=2.2207.3 mpi4py=3.1.4
+dedalus==2.2207.3
+mpi4py==3.1.4
+numpy==1.26.4
+scipy==1.13.0
+h5py==3.11.0
+torch==2.9.1
+stable-baselines3==2.7.1
+gymnasium==1.2.1
+pettingzoo==1.25.0
+SuperSuit==3.10.0
+omegaconf==2.3.0
+PyYAML==6.0.3
+tensorboard==2.17.1
+matplotlib==3.9.2

@@ -1,0 +1,13 @@
+[build-system]
+requires = ["setuptools>=64"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "policy-drift"
+version = "1.0.0"
+description = "Policy-DRIFT: Dynamic Reward-Informed Flow Trajectory Steering"
+requires-python = ">=3.10"
+
+[tool.setuptools.packages.find]
+where = ["flow_matching_trg", "drl_pipeline"]
+include = ["trg*", "drl*"]

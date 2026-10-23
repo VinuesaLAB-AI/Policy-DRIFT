@@ -1,0 +1,16 @@
+# Conditional flow matching velocity model.
+output_dir: flow_matching_trg/outputs/cfm
+model:
+  base_channels: 64
+training:
+  batch_size: 256
+  num_workers: 4
+  max_epochs: 500
+  lr: 1.0e-3
+  weight_decay: 1.0e-2
+  grad_clip: 1.0
+  plateau_patience: 20
+  plateau_factor: 0.5
+  min_lr: 1.0e-6
+  early_stopping_patience: 50
+  seed: 42

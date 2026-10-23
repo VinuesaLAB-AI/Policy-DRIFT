@@ -1,0 +1,12 @@
+# Short run on the bundled sample snapshots, used to check an installation.
+dataset:
+  regimes:
+    uncontrolled: data/sample/uncontrolled
+    opposition_control: data/sample/opposition_control
+    td3_wse: data/sample/td3_wse
+  max_snapshots: null
+training:
+  batch_size: 4
+  num_workers: 0
+  max_epochs: 2
+  val_every_n_epochs: 1

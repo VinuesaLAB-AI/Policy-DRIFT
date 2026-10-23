@@ -1,0 +1,59 @@
+# Minimal turbulent open channel at Re_tau = 180 controlled by wall blowing/suction.
+# Lengths are scaled with the channel height h and velocities with the laminar centreline velocity.
+
+simulation:
+  Lx: 2.67
+  Lz: 0.8
+  Ly: 1.0
+  Nx: 16
+  Nz: 16
+  Ny: 64
+  Re: 4200.0          # Re_cl = U_cl h / nu
+  dt: 0.005           # DNS time step (dt+ = 0.039)
+  delta_t: 0.08       # actuation interval (dt+ = 0.6), i.e. 16 DNS steps per action
+  nprocx: 8           # Dedalus process mesh; nprocx * nprocz MPI ranks run the DNS
+  nprocz: 8
+  output_every: 16    # DNS steps between written outputs
+  snapshot_every: 130 # DNS steps between saved flow fields in generate_snapshots.py (Delta t+ = 5)
+
+control:
+  n_agents_x: 16
+  n_agents_z: 16
+  u_tau: 0.042857     # observations are divided by u_tau
+  max_amplitude: 0.04287  # actions in [-1, 1] are scaled by this velocity (u_tau)
+
+reward:
+  wall_shear_ref: 7.9        # uncontrolled mean wall shear, DR = 1 - tau_w / wall_shear_ref
+  relaminarisation_dr: 0.6   # training episodes end when DR exceeds this value
+
+training:
+  episode_length: 2500       # actions per episode (t+ = 1543)
+  n_episodes: 400
+  validate_every: 2          # episodes between evaluations on data/validation
+  learning_rate: 1.0e-4
+  buffer_size: 1000000
+  batch_size: 64
+  learning_starts: 100
+  train_freq: 300            # actions between updates (t+ = 185)
+  gradient_steps: 64
+  action_noise: 0.2          # std of the TD3 Gaussian exploration noise, in units of u_tau
+  critic_layers: [16, 64, 64]
+  actor_layers: [8]
+
+trg:
+  velocity_model: checkpoints/cfm/velocity_model.pt
+  reward_predictor: checkpoints/trg/reward_predictor.pt
+  means: data/means.h5
+  T: 25
+  n_euler_steps: 50
+  hidden_channels: 64
+  guidance_scale: 5.0
+  horizon: 8                 # actions between target refreshes (Delta t+ = 5)
+  device: cpu
+  num_threads: 16
+  # Min-max bounds of the fluctuations, as in flow_matching_trg/configs/dataset.yaml.
+  mins: [-0.3725853723726845, -0.21818508223004004, -0.27231586416336867]
+  maxs: [0.5168128959577776, 0.233515466311554, 0.2986736222814288]
+
+evaluation:
+  n_outputs: 4920            # written outputs per trajectory (t+ = 3027)

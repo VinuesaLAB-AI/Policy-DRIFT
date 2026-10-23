@@ -1,0 +1,20 @@
+# Snapshot pairs (u0, u1) at Delta t+ = 5 from three control regimes (paths relative to the repository root).
+# The first regime also provides the test split used for validation during training.
+dataset:
+  regimes:
+    uncontrolled: data/cfm/uncontrolled
+    opposition_control: data/cfm/opposition_control
+    td3_wse: data/cfm/td3_wse
+  max_snapshots: 7350
+  train_split: 0.8
+  mean_file: data/means.h5
+  # Per-channel min / max of the (u', v', w') fluctuations used for min-max normalisation.
+  mins: [-0.3725853723726845, -0.21818508223004004, -0.27231586416336867]
+  maxs: [0.5168128959577776, 0.233515466311554, 0.2986736222814288]
+  # Terminal reward constants in normalised units (see trg/reward.py).
+  reward:
+    dy: 0.001204
+    du_dy_zero_offset: 6.67962955
+    du_dy_ref: 8.88240992
+    v_zero_offset: 0.48303
+    v_ref: 2.7144137727317343e-05
