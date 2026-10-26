@@ -4,7 +4,7 @@
     python evaluate.py --model ../checkpoints/drl/td3_wse.zip --inits 1 --n-outputs 160
 
 For every restart file data/eval/snapshots_s<i>.h5 (i in --inits, default 1..6) the DNS is run for
-``n_outputs`` actions (t+ = 3027 by default) and its outputs are written to
+``n_outputs`` actions (t+ = 3000 by default) and its outputs are written to
 outputs/evaluation/<model name>/init_<i>/{scalars,plane_bc,planes,profiles}. The drag reduction
 and actuation energy averaged over t+ in [500, 3000] are printed; summary.json collects all
 finished trajectories in the output directory.

@@ -3,17 +3,18 @@
 The models behind the results in the paper. The `.pt` files are stored with Git LFS
 (`git lfs install && git lfs pull` after cloning).
 
-| File | Model | Selected at | Used for |
-|---|---|---|---|
-| `cfm/velocity_model.pt` | CFM velocity model v_θ (3D U-Net, 23.36M parameters) | epoch 153, lowest validation loss (0.00848) | TRG targets |
-| `trg/reward_predictor.pt` | Reward predictor R_ψ (1.29M parameters), terminal reward DR − E with α = 1 | epoch 338, lowest training prediction error (0.0538) | TRG targets |
-| `drl/policy_drift_td3.zip` | Policy-DRIFT, TD3 tracking TRG targets with guidance scale γ = 5 | episode 16 | Table 1, γ = 5 row of the guidance-scale sweep |
-| `drl/td3_wse.zip` | TD3 trained on DR (TD3-WSE) | episode 56 | Table 1 |
-| `drl/td3_wen.zip` | TD3 trained on DR − E_act (TD3-WEN) | episode 10 | Table 1 |
+| File | Model | Used for |
+|---|---|---|
+| `cfm/velocity_model.pt` | CFM velocity model v_θ (3D U-Net, 23.4M parameters) | TRG targets |
+| `trg/reward_predictor.pt` | Reward predictor R_ψ (1.29M parameters) | TRG targets |
+| `drl/policy_drift_td3.zip` | Policy-DRIFT, TD3 tracking TRG targets with guidance scale γ = 5 | Table 1 |
+| `drl/td3_wse.zip` | TD3 trained on DR (TD3-WSE) | Table 1 |
+| `drl/td3_wen.zip` | TD3 trained on DR − E_act (TD3-WEN) | Table 1 |
 
-The DRL checkpoints are the policies with the highest mean episode reward on the validation initial
-condition (`data/validation`); they are Stable-Baselines3 2.7.1 archives.
-The `.pt` files hold `model_state_dict` and the selection metadata in the table:
+The CFM model is the checkpoint with the lowest validation loss, the reward predictor the one with the
+lowest prediction error, and the DRL policies those with the highest mean episode reward on the validation
+initial condition (`data/validation`). The DRL checkpoints are Stable-Baselines3 2.7.1 archives; the `.pt`
+files hold the weights under `model_state_dict`:
 
 ```python
 import torch
