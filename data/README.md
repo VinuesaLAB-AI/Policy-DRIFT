@@ -8,7 +8,7 @@ laminar centreline velocity.
 |---|---|---|
 | `restart/snapshots_s{1..6}.h5` | Six turbulent fields; every training episode starts from one of them, drawn with a generator seeded by `--seed` | `drl_pipeline/train.py` |
 | `validation/snapshot_validation.h5` | Held-out field on which checkpoints are scored during training | `drl_pipeline/train.py` |
-| `eval/snapshots_s{1..6}.h5` | The six held-out initial conditions of Table 1 | `drl_pipeline/evaluate.py` |
+| `eval/snapshots_s{1..6}.h5` | Six held-out initial conditions for evaluating trained controllers | `drl_pipeline/evaluate.py` |
 | `turbMean.h5` | Mean streamwise velocity profile U(y), used for the u − U diagnostics | DNS workers |
 | `generation/snapshot_restart.h5` | Turbulent field from which every snapshot-generation run starts | `drl_pipeline/generate_snapshots.py` |
 | `means.h5` | Per-voxel mean velocity and per-channel min / max / std of the fluctuations of the CFM training data | CFM data loader, TRG targets |
