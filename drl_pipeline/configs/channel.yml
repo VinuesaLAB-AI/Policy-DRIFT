@@ -27,7 +27,7 @@ reward:
   relaminarisation_dr: 0.6   # training episodes end when DR exceeds this value
 
 training:
-  episode_length: 2500       # actions per episode (t+ = 1500)
+  episode_length: 3000       # actions per episode (t+ = 1800)
   n_episodes: 100
   validate_every: 2          # episodes between evaluations on data/validation
   learning_rate: 1.0e-4

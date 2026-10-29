@@ -58,7 +58,7 @@ Settings (`configs/cfm.yaml`, `configs/trg.yaml`):
 |---|---|---|
 | Optimiser | AdamW, lr 10⁻³, weight decay 10⁻² | AdamW, lr 10⁻⁴, weight decay 10⁻² |
 | Schedule | ReduceLROnPlateau on the validation loss (patience 20, factor 0.5) | cosine annealing over 500 epochs |
-| Batch size | 256 | 128 |
+| Batch size | 128 | 24 |
 | Gradient clipping | 1.0 | 1.0 |
 | Epochs | up to 500, early stopping after 50 epochs without improvement | up to 500, early stopping after 50 epochs without improvement |
 | Checkpoint | lowest validation loss | lowest training prediction error at the terminal state |

@@ -6,7 +6,7 @@ n_euler_steps: 50
 hidden_channels: 64
 alpha: 1.0
 training:
-  batch_size: 128
+  batch_size: 24
   num_workers: 4
   max_epochs: 500
   lr: 1.0e-4

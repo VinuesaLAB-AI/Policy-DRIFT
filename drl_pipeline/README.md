@@ -34,7 +34,7 @@ The agent process builds the environment, which starts a group of `nprocx × npr
   - `trg`: −RMSE between the normalised flow field and the TRG target, which is recomputed every 8 actions
     (Δt⁺ = 5) from the current field.
 
-Episodes last 2,500 actions (t⁺ = 1,500) and start from one of the six fields in `data/restart`. Every
+Episodes last 3,000 actions (t⁺ = 1,800) and start from one of the six fields in `data/restart`. Every
 two episodes the deterministic policy is run from `data/validation`; the best one is saved to
 `best_model/`. For `trg` runs the validation reward is DR.
 

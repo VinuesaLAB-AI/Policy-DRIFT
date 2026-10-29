@@ -3,7 +3,7 @@ output_dir: flow_matching_trg/outputs/cfm
 model:
   base_channels: 64
 training:
-  batch_size: 256
+  batch_size: 128
   num_workers: 4
   max_epochs: 500
   lr: 1.0e-3
