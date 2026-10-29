@@ -28,7 +28,7 @@ reward:
 
 training:
   episode_length: 2500       # actions per episode (t+ = 1500)
-  n_episodes: 400
+  n_episodes: 100
   validate_every: 2          # episodes between evaluations on data/validation
   learning_rate: 1.0e-4
   buffer_size: 1000000
