@@ -7,6 +7,7 @@ name = "policy-drift"
 version = "1.0.0"
 description = "Policy-DRIFT: Dynamic Reward-Informed Flow Trajectory Steering"
 requires-python = ">=3.10"
+license = { text = "MIT" }
 
 [tool.setuptools.packages.find]
 where = ["flow_matching_trg", "drl_pipeline"]

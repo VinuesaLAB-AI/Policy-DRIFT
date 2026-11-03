@@ -125,6 +125,11 @@ to them.
 }
 ```
 
+## License
+
+This code is released under the MIT License (see [LICENSE](LICENSE)). It depends on Dedalus (GPL v3.0),
+PyTorch (BSD 3-Clause) and Stable-Baselines3 (MIT), which keep their own licenses.
+
 ## Acknowledgements
 
 The interface between the agent and the Dedalus solver was originally developed by Miguel Beneitez
