@@ -17,9 +17,6 @@ Policy-DRIFT moves the reward out of the policy gradient and into generative inf
 3. A **TD3 policy** tracks the TRG target by minimising the RMSE between the flow field and the target,
    which is refreshed every 8 actions.
 
-In the paper, Policy-DRIFT reaches 48.95% drag reduction on held-out initial conditions, against 42.13% for
-the TD3 controller trained on the drag reduction itself, with about 37× less actuation energy.
-
 ## Repository layout
 
 ```
@@ -85,16 +82,9 @@ python scripts/table1.py drl_pipeline/outputs/evaluation/*
 On a SLURM cluster, submit the same commands with `drl_pipeline/slurm/evaluate.sbatch`. The simulations
 are bitwise reproducible on the 8 × 8 process mesh with the versions in `requirements.txt`.
 
-Table 1 of the paper (drag reduction in %, E_act × 10, R̄ = DR − E_act):
-
-| Method        | DR mean | DR std | E_act mean | E_act std | R̄     |
-|---------------|--------:|-------:|-----------:|----------:|------:|
-| Policy-DRIFT  | 48.95   | 11.70  | 0.0990     | 0.0711    | 0.480 |
-| TD3-WEN       | 42.86   | 11.77  | 0.0609     | 0.0406    | 0.423 |
-| TD3-WSE       | 42.13   | 12.71  | 3.692      | 0.0431    | 0.052 |
-
-The opposition-control and SAC-WSE rows of Table 1 are not part of this release; SAC-WSE can be retrained
-with `python train.py --reward wse --algo sac`.
+`scripts/table1.py` reports, for each evaluated controller, the drag reduction and E_act averaged over
+t⁺ ∈ [500, 3000] as mean and standard deviation over the trajectories. Opposition control and SAC-WSE are
+not included as checkpoints; SAC-WSE can be retrained with `python train.py --reward wse --algo sac`.
 
 ## Training from scratch
 
