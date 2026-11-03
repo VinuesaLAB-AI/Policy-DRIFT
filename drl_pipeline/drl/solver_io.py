@@ -1,7 +1,4 @@
-"""Agent-side MPI bridge to the DNS workers (drl/dns_worker.py).
-
-Originally developed by Miguel Beneitez (KTH Royal Institute of Technology).
-"""
+"""Agent-side MPI bridge to the DNS workers (drl/dns_worker.py)."""
 
 import os
 import sys

@@ -132,6 +132,4 @@ PyTorch (BSD 3-Clause) and Stable-Baselines3 (MIT), which keep their own license
 
 ## Acknowledgements
 
-The interface between the agent and the Dedalus solver was originally developed by Miguel Beneitez
-(KTH Royal Institute of Technology). This research was sponsored by the Army Research Office under
-Grant Number W911NF-26-1-A053.
+This research was sponsored by the Army Research Office under Grant Number W911NF-26-1-A053.
