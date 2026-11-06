@@ -1,0 +1,295 @@
+<!doctype html>
+<html lang="en" data-type="software" data-radius="soft" data-ground="sand" data-buttons="pill" data-motion>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Policy-DRIFT: Dynamic Reward-Informed Flow Trajectory Steering</title>
+<meta name="description" content="Policy-DRIFT steers conditional flow matching with Terminal Reward Guidance to give a DRL policy targets for reducing drag in turbulent channel flow. NeurIPS 2026.">
+<meta name="site-kind" content="software">
+<meta name="page-type" content="software">
+<link rel="canonical" href="https://vinuesalab-ai.github.io/Policy-DRIFT/">
+<link rel="icon" type="image/png" href="assets/img/favicon.png">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Policy-DRIFT: Dynamic Reward-Informed Flow Trajectory Steering">
+<meta property="og:description" content="Conditional flow matching and Terminal Reward Guidance for drag reduction in turbulent channel flow. NeurIPS 2026.">
+<meta property="og:url" content="https://vinuesalab-ai.github.io/Policy-DRIFT/">
+<meta property="og:image" content="https://vinuesalab-ai.github.io/Policy-DRIFT/assets/img/og.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wdth,wght@85..100,400..700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/system.css">
+<link rel="stylesheet" href="assets/ui/cards.css">
+<link rel="stylesheet" href="assets/motion/motion.css">
+<link rel="stylesheet" href="assets/layout/layout.css">
+<style>
+:root {
+  --p-bg: #dfdedb; --p-surface: #d3d2ce; --p-ink: #26251e; --p-muted: #5a5850;
+  --p-accent: #2456d6; --p-accent-ink: #ffffff; --p-action: #2456d6; --p-action-ink: #ffffff;
+  --p-inv-bg: #26251e; --p-inv-surface: #313029; --p-inv-ink: #dfdedb; --p-inv-muted: #9e9d99;
+  --p-inv-accent: #dfdedb; --p-inv-accent-ink: #26251e; --p-inv-action: #dfdedb; --p-inv-action-ink: #26251e;
+  --font-display: "IBM Plex Sans", system-ui, sans-serif;
+  --font-text: "IBM Plex Sans", system-ui, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+  --display-weight: 500;
+  --display-tracking: -0.025em;
+  --display-tracking-xl: -0.035em;
+  --ly-scale: 0.98;
+}
+</style>
+<style>
+  /* page CSS: only what sits inside a visual, and the table and code blocks the kit lacks */
+  .h1-sub { display: block; margin-top: var(--s-3); font-size: var(--t-h3); line-height: 1.2; letter-spacing: -0.015em; }
+  .authors { margin: var(--s-5) 0 0; font-size: 16px; line-height: 1.5; }
+  .authors small { display: block; margin-top: var(--s-1); font-size: 14px; color: var(--muted); }
+  .hero__lead { margin-top: var(--s-5); }
+
+  .cols { margin-top: var(--s-5); }
+  .cols p { margin: 0 0 var(--s-4); }
+  .cols p:last-child { margin-bottom: 0; }
+
+  .frame--fig { background: #fff; display: block; height: 100%; min-height: 0; transition: transform .2s ease; }
+  .frame--fig::before { display: none; }
+  .frame--fig picture { display: contents; }
+  .frame--fig .frame__img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; padding: var(--s-3); }
+  .frame--ratio { height: auto; aspect-ratio: var(--ar); }
+  a.frame--fig:hover { transform: translateY(-2px); }
+  .fig-stack { display: flex; flex-direction: column; margin-top: var(--s-4); }
+  .fig-panel { flex: 1 1 0; min-height: 0; }
+  .fig-panel[hidden] { display: none; }
+
+  .step .step-num { font-family: var(--font-mono); font-size: 14px; }
+  .step h3 { margin: var(--s-2) 0 var(--s-2); font-size: var(--t-card); line-height: 1.3; font-weight: 500; }
+  .step p { margin: 0; }
+  .step sub { line-height: 0; }
+
+  .eq { font-size: clamp(20px, 2.2vw, 28px); line-height: 2; margin: 0; white-space: nowrap; }
+  .eq i { font-style: italic; }
+  .eq sub, .eq sup { font-size: .62em; line-height: 0; }
+  .eq b { font-weight: 500; }
+
+  .t1 { width: 100%; border-collapse: collapse; font-variant-numeric: tabular-nums; }
+  .t1 th, .t1 td { padding: var(--s-3) 0; text-align: right; border-bottom: 1px solid color-mix(in srgb, var(--ink) 14%, transparent); font-size: 16px; font-weight: 400; vertical-align: baseline; }
+  .t1 th:first-child, .t1 td:first-child { text-align: left; }
+  .t1 thead th { font-size: 13px; font-weight: 500; color: var(--muted); }
+  .t1 tbody th { font-size: 13px; font-weight: 500; color: var(--muted); text-align: left; padding-top: var(--s-5); border-bottom: 0; padding-bottom: 0; }
+  .t1 .ours td { font-weight: 500; }
+  .t1 small { font-size: 14px; color: var(--muted); font-weight: 400; }
+
+  .code { margin: 0; padding: var(--s-4); background: var(--p-inv-bg); color: var(--p-inv-ink); border-radius: var(--r-md); font-family: var(--font-mono); font-size: 15px; line-height: 1.65; white-space: pre-wrap; overflow-wrap: anywhere; }
+  .code span { color: #c4c3be; }
+  .closing__cta.close--type > .btn--xl { width: 100%; max-width: none; }
+
+  @media (max-width: 1279px) {
+    .t1 th, .t1 td { padding: var(--s-2) 0; }
+    .t1 tbody th { padding-top: var(--s-3); padding-bottom: 0; }
+  }
+  @media (min-width: 640px) and (max-width: 1023px) {
+    .footer .footer__col { grid-column: auto / span 4; }
+  }
+  @media (max-width: 639px) {
+    .hero__lead { display: none; }
+    main .frame--fig, main .frame--fig.fill, main .fig-stack.fill, main .fig-panel { flex: none; height: auto; min-height: 0; }
+    .frame--fig { aspect-ratio: var(--ar-sm, var(--ar)); }
+    .frame--fig .frame__img { padding: var(--s-1); }
+    .code--opt, #code .cols { display: none; }
+    .code { font-size: 13px; padding: var(--s-3); line-height: 1.5; }
+    .t1 th, .t1 td { font-size: 14px; padding: var(--s-2) 0 var(--s-2) var(--s-2); }
+    .t1 th:first-child, .t1 td:first-child { padding-left: 0; }
+    .t1 small { display: block; font-size: 13px; }
+  }
+</style>
+</head>
+<body id="top">
+<!-- type: software. deal: hero split, nav-centre, close-type, footer-dark, rhythm dark-band, buttons pill, mark wordmark,
+     palette stone-blueprint, type plex. No effect, ground or moment: the visuals are the paper's figures. -->
+<header class="nav nav--centre">
+  <div class="wrap nav__bar">
+    <a class="nav__logo" href="#top">Policy-DRIFT</a>
+    <nav class="nav__links" aria-label="Main">
+      <div class="nav__item"><a class="nav__link" href="#overview">Overview</a></div>
+      <div class="nav__item"><a class="nav__link" href="#method">Method</a></div>
+      <div class="nav__item"><a class="nav__link" href="#guidance">Guidance</a></div>
+      <div class="nav__item"><a class="nav__link" href="#results">Results</a></div>
+      <div class="nav__item"><a class="nav__link" href="#code">Code</a></div>
+    </nav>
+    <div class="nav__actions">
+      <a class="btn btn--primary" href="https://arxiv.org/abs/2605.14022">Read the paper</a>
+    </div>
+    <button class="nav__toggle" type="button" aria-expanded="false" aria-label="Menu"><svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true"><path d="M2 5h14M2 13h14" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></button>
+  </div>
+</header>
+
+<main>
+  <section class="hero hero--split" aria-labelledby="hero-h">
+    <div class="wrap"><div class="hero-text grid hero__grid">
+      <div class="hero__text span-6">
+        <p class="hero__kicker">NeurIPS 2026</p>
+        <h1 id="hero-h">Policy-DRIFT<span class="h1-sub">Dynamic Reward-Informed Flow Trajectory Steering</span></h1>
+        <p class="authors">Atharva Mahajan<sup>*†</sup>, Abhijeet Vishwasrao<sup>*†</sup>, Yuning Wang, Ricardo Vinuesa<sup>*</sup>
+          <small>University of Michigan, Ann Arbor. †Equal contribution. *Corresponding authors.</small></p>
+        <p class="hero__lead">A generative model of turbulent flow, steered by reward at inference, gives a DRL policy targets to track for skin-friction drag reduction.</p>
+        <div class="btn-row"><a class="btn btn--primary" href="https://arxiv.org/abs/2605.14022">Read the paper</a><a class="btn btn--secondary" href="https://github.com/VinuesaLAB-AI/Policy-DRIFT">Get the code</a></div>
+      </div>
+      <div class="hero__media span-6 start-7">
+        <img src="assets/img/hero-field.webp" srcset="assets/img/hero-field-640.webp 640w, assets/img/hero-field.webp 1190w" sizes="(max-width: 1023px) 100vw, 628px" alt="Streamwise velocity fluctuations in a turbulent channel, from Figure 2 of the paper" width="1190" height="1357" fetchpriority="high">
+        <div class="ly-float">
+          <div class="ly-float__row"><span>Table 1</span><span>Re<sub>τ</sub> = 180</span></div>
+          <div class="ly-float__title">48.95% drag reduction, ~37× less actuation energy than TD3-WSE</div>
+        </div>
+      </div>
+    </div></div>
+  </section>
+
+  <section class="section" id="overview">
+    <div class="wrap">
+      <h2>Reward design and the DRL ceiling</h2>
+      <div class="grid cols">
+        <div class="span-6"><p>Skin-friction drag accounts for roughly half of the total aerodynamic drag on commercial aircraft. DRL is the leading approach for real-time flow control, but a scalar reward is a proxy for what optimal control looks like, and the proxy limits the policy.</p></div>
+        <div class="span-6 start-7"><p>Policy-DRIFT moves reward information from policy gradients to generative model inference. When the control objective changes, the CFM model needs no retraining and only the reward predictor is updated.</p></div>
+      </div>
+      <a class="frame frame--photo frame--fig fill" href="assets/img/fig1-control-space.webp" style="margin-top: var(--s-5); --ar: 2.651"><img class="frame__img" src="assets/img/fig1-control-space.webp" srcset="assets/img/fig1-control-space-900.webp 900w, assets/img/fig1-control-space.webp 2651w" sizes="(max-width: 1279px) 100vw, 1280px" width="2651" height="1000" alt="Figure 1, top: applications, the paths taken by opposition control, WSE and Policy-DRIFT through flow states, and bars comparing their actuation energy and drag reduction" loading="lazy"></a>
+    </div>
+  </section>
+
+  <section class="section ground-surface" id="method">
+    <div class="wrap">
+      <h2>Policy-DRIFT in 3 steps</h2>
+      <div class="grid" style="margin-top: var(--s-5)">
+        <div class="step span-4"><span class="step-num">1</span><h3>Conditional flow matching</h3><p>One conditional flow matching model learns uncontrolled, opposition-controlled and DRL-controlled DNS from 7,350 snapshot pairs per regime, with no regime labels.</p></div>
+        <div class="step span-4"><span class="step-num">2</span><h3>Terminal Reward Guidance</h3><p>Terminal Reward Guidance moves ODE trajectories toward terminal states that maximise DR − E<sub>act</sub>, using the gradient of a learned reward predictor.</p></div>
+        <div class="step span-4"><span class="step-num">3</span><h3>Tracking policy</h3><p>A TD3 policy minimises RMSE to the guided target over each 8-step horizon. Once deployed it senses one wall-parallel plane and queries no generative model.</p></div>
+      </div>
+      <a class="frame frame--photo frame--fig fill" href="assets/img/fig1-pipeline.webp" style="margin-top: var(--s-4); --ar: 3.141"><img class="frame__img" src="assets/img/fig1-pipeline.webp" srcset="assets/img/fig1-pipeline-900.webp 900w, assets/img/fig1-pipeline.webp 2651w" sizes="(max-width: 1279px) 100vw, 1280px" width="2651" height="844" alt="Figure 1, bottom: CFM trained on opposition control and WSE data, Terminal Reward Guidance with the reward predictor, and the agent tracking the target by policy exploration" loading="lazy"></a>
+    </div>
+  </section>
+
+  <section class="section ground-inverse" id="guidance" style="--hm: 2">
+    <div class="wrap">
+      <h2>Terminal Reward Guidance</h2>
+      <div class="grid cols">
+        <div class="span-6">
+          <p>TRG corrects each ODE state before the velocity step, and the velocity model then maps the nudged state back toward the physical flow manifold. Applying the same correction after the step causes reward hacking: drag reduction clamps at 1.0 within the first few guidance steps, on physically unrealisable states.</p>
+          <p>On held-out uncontrolled snapshots, guided rollouts raise drag reduction by ΔDR ≈ 0.026 to 0.030 at comparably low actuation energy. The perturbation is two orders of magnitude smaller than the velocity fluctuations.</p>
+        </div>
+        <div class="span-6 start-7">
+          <p class="eq"><b>ũ</b><sub><i>s</i></sub><sup>+</sup> = <b>ũ</b><sub><i>s</i></sub> + <i>γ</i> <i>δs</i> ∇<i>R</i><sub><i>ψ</i></sub>(<b>ũ</b><sub><i>s</i></sub>, <i>s</i>)</p>
+          <p class="eq"><b>ũ</b><sub><i>s</i>+<i>δs</i></sub> = <b>ũ</b><sub><i>s</i></sub><sup>+</sup> + <i>δs</i> · <i>v</i><sub><i>θ</i></sub>(<b>ũ</b><sub><i>s</i></sub><sup>+</sup>, <i>s</i>, <b>u</b><sub>0</sub>)</p>
+          <div class="tabs" role="tablist" aria-label="Regime of the held-out snapshots" style="margin-top: var(--s-3)">
+            <button class="tab" role="tab" type="button" id="t-u" aria-selected="true" aria-controls="p-u">Uncontrolled</button>
+            <button class="tab" role="tab" type="button" id="t-o" aria-selected="false" aria-controls="p-o" tabindex="-1">Opposition control</button>
+            <button class="tab" role="tab" type="button" id="t-d" aria-selected="false" aria-controls="p-d" tabindex="-1">TD3-WSE</button>
+          </div>
+        </div>
+      </div>
+      <div class="fig-stack fill">
+        <div class="fill fig-panel" role="tabpanel" id="p-u" aria-labelledby="t-u"><a class="frame frame--photo frame--fig" href="assets/img/fig2-uncontrolled.webp" style="--ar: 3.528; --ar-sm: 1.507"><picture><source media="(max-width: 639px)" srcset="assets/img/fig2-uncontrolled-900.webp"><img class="frame__img" src="assets/img/fig-strip-u.webp" width="2600" height="737" alt="Figure 2, first snapshot: streamwise velocity fluctuations for a held-out uncontrolled snapshot, showing the input, the CFM state, the TRG state and their difference" loading="lazy"></picture></a></div>
+        <div class="fill fig-panel" role="tabpanel" id="p-o" aria-labelledby="t-o" hidden><a class="frame frame--photo frame--fig" href="assets/img/fig-a-opposition.webp" style="--ar: 3.528; --ar-sm: 1.507"><picture><source media="(max-width: 639px)" srcset="assets/img/fig-a-opposition-900.webp"><img class="frame__img" src="assets/img/fig-strip-o.webp" width="2600" height="737" alt="Appendix figure, first snapshot: the same comparison for a held-out opposition-controlled snapshot" loading="lazy"></picture></a></div>
+        <div class="fill fig-panel" role="tabpanel" id="p-d" aria-labelledby="t-d" hidden><a class="frame frame--photo frame--fig" href="assets/img/fig-a-drl.webp" style="--ar: 3.528; --ar-sm: 1.507"><picture><source media="(max-width: 639px)" srcset="assets/img/fig-a-drl-900.webp"><img class="frame__img" src="assets/img/fig-strip-d.webp" width="2600" height="737" alt="Appendix figure, first snapshot: the same comparison for a held-out TD3-WSE snapshot" loading="lazy"></picture></a></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section g2 g2m" id="results">
+    <div class="wrap">
+      <div class="group">
+        <h2>Closed-loop results in Table 1</h2>
+        <p class="measure cols">Policy-DRIFT reaches 48.95% drag reduction, 16.2% higher than TD3-WSE with ~37× less actuation energy, and 38.9% higher than opposition control at comparable energy. The policy optimises neither quantity directly.</p>
+        <table class="t1" style="margin-top: var(--s-4)">
+          <thead><tr><th scope="col">Method</th><th scope="col">DR (%)</th><th scope="col">E<sub>act</sub> (×10<sup>−1</sup>)</th><th scope="col">R̄</th></tr></thead>
+          <tbody><tr><th colspan="4" scope="rowgroup">Training benchmarks</th></tr>
+            <tr><td>Opp-Control</td><td>35.23 <small>± 10.09</small></td><td>0.0685 <small>± 0.0241</small></td><td>0.345</td></tr>
+            <tr><td>TD3-WSE</td><td>42.13 <small>± 12.71</small></td><td>3.692 <small>± 0.0431</small></td><td>0.052</td></tr></tbody>
+          <tbody><tr><th colspan="4" scope="rowgroup">Experiments</th></tr>
+            <tr class="ours"><td>Policy-DRIFT</td><td>48.95 <small>± 11.70</small></td><td>0.0990 <small>± 0.0711</small></td><td>0.480</td></tr>
+            <tr><td>TD3-WEN</td><td>42.86 <small>± 11.77</small></td><td>0.0609 <small>± 0.0406</small></td><td>0.423</td></tr>
+            <tr><td>TD3-WSE</td><td>42.13 <small>± 12.71</small></td><td>3.692 <small>± 0.0431</small></td><td>0.052</td></tr>
+            <tr><td>SAC-WSE</td><td>32.31 <small>± 2.33</small></td><td>0.1193 <small>± 0.0228</small></td><td>0.311</td></tr></tbody>
+        </table>
+      </div>
+      <div class="group">
+        <a class="frame frame--photo frame--fig fill" href="assets/img/fig3-trajectories.webp" style="--ar: 1.4"><img class="frame__img" src="assets/img/fig3-trajectories.webp" srcset="assets/img/fig3-trajectories-900.webp 900w, assets/img/fig3-trajectories.webp 2200w" sizes="(max-width: 1279px) 100vw, 1000px" width="2200" height="1571" alt="Figure 3: drag reduction and actuation energy over time for Policy-DRIFT, TD3-WSE, TD3-WEN, SAC-WSE and opposition control" loading="lazy"></a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section ground-surface" id="physics">
+    <div class="wrap">
+      <h2>Joint PDFs at the sensing plane</h2>
+      <div class="grid cols">
+        <div class="span-6"><p>At y<sup>+</sup> ≈ 15, the ejection and sweep tails of the uncontrolled flow show how each controller acts on the near-wall cycle. TD3-WSE suppresses these tails with a bimodal v′<sup>+</sup> reaching ±1, a sign of over-actuation.</p></div>
+        <div class="span-6 start-7"><p>TD3-WEN recovers a compact v′<sup>+</sup> and weakens the suppression. Policy-DRIFT has the most compact distribution, with the strongest attenuation of both quadrants.</p></div>
+      </div>
+      <a class="frame frame--photo frame--fig fill" href="assets/img/fig4-joint-pdf.webp" style="margin-top: var(--s-5); --ar: 4.3; --ar-sm: 1.527"><picture><source media="(max-width: 639px)" srcset="assets/img/fig4-joint-pdf-900.webp"><img class="frame__img" src="assets/img/fig4-strip.webp" srcset="assets/img/fig4-strip-900.webp 900w, assets/img/fig4-strip.webp 2800w" sizes="(max-width: 1279px) 100vw, 1280px" width="2800" height="649" alt="Figure 4: joint PDFs of streamwise and wall-normal velocity fluctuations for the uncontrolled flow and each controller" loading="lazy"></picture></a>
+    </div>
+  </section>
+
+  <section class="section" id="code">
+    <div class="wrap">
+      <h2>Code, checkpoints and citation</h2>
+      <p class="measure cols">The repository holds the trained CFM model, reward predictor and DRL policies, with DNS restart files and sample snapshots.</p>
+      <div class="grid" style="margin-top: var(--s-4)">
+        <pre class="code span-6"><span># Install (Python 3.11)</span>
+conda create -n policy-drift -c conda-forge \
+  python=3.11 dedalus=2.2207.3 mpi4py=3.1.4
+conda activate policy-drift
+pip install -r requirements.txt
+pip install -e .</pre>
+        <pre class="code code--opt span-6 start-7"><span># Two epochs of CFM and reward-predictor training</span>
+cd flow_matching_trg
+python train_cfm.py --dummy
+python train_trg.py --dummy
+<span># Two 20-action episodes of Policy-DRIFT</span>
+cd ../drl_pipeline
+python train.py --reward trg --dummy</pre>
+      </div>
+      <pre class="code" id="bibtex" style="margin-top: var(--s-4)">@article{mahajan2026policydrift,
+  title   = {Policy-{DRIFT}: Dynamic Reward-Informed Flow Trajectory Steering},
+  author  = {Mahajan, Atharva and Vishwasrao, Abhijeet and Wang, Yuning and Vinuesa, Ricardo},
+  journal = {arXiv preprint arXiv:2605.14022},
+  year    = {2026}
+}</pre>
+      <div class="btn-row" style="margin-top: var(--s-4)"><a class="btn btn--secondary" href="https://github.com/VinuesaLAB-AI/Policy-DRIFT">Get the code</a><button class="btn btn--secondary" type="button" id="copy-bib">Copy the citation</button></div>
+    </div>
+  </section>
+</main>
+
+<footer class="footer closing footer--dark ground-inverse" id="contact" aria-labelledby="close-h">
+  <div class="wrap">
+    <div class="closing__cta close--type">
+      <div>
+        <h2 id="close-h">Read the Policy-DRIFT paper</h2>
+        <p class="t-small muted">arXiv:2605.14022, NeurIPS 2026.</p>
+      </div>
+      <a class="btn btn--primary btn--xl" href="https://arxiv.org/abs/2605.14022">Read the paper</a>
+    </div>
+    <div class="closing__links">
+      <div class="grid">
+        <div class="span-4">
+          <a class="nav__logo" href="#top">Policy-DRIFT</a>
+          <p class="footer__lede">Dynamic Reward-Informed Flow Trajectory Steering.</p>
+        </div>
+        <div class="span-2 start-7 footer__col"><h4>Paper</h4><ul><li><a href="https://arxiv.org/abs/2605.14022">arXiv</a></li><li><a href="https://arxiv.org/pdf/2605.14022">PDF</a></li></ul></div>
+        <div class="span-2 footer__col"><h4>Code</h4><ul><li><a href="https://github.com/VinuesaLAB-AI/Policy-DRIFT">GitHub</a></li><li><a href="https://github.com/VinuesaLAB-AI/Policy-DRIFT/blob/main/LICENSE">MIT License</a></li></ul></div>
+        <div class="span-2 footer__col"><h4>Contact</h4><ul><li><a href="mailto:atharvm@umich.edu">Atharva Mahajan</a></li><li><a href="mailto:abvish@umich.edu">Abhijeet Vishwasrao</a></li><li><a href="mailto:rvinuesa@umich.edu">Ricardo Vinuesa</a></li></ul></div>
+      </div>
+      <div class="footer__legal">
+        <span>This research was sponsored by the Army Research Office under Grant Number W911NF-26-1-A053.</span>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script type="module" src="assets/system.js"></script>
+<script type="module" src="assets/motion/motion.js"></script>
+<script type="module" src="assets/layout/layout.js"></script>
+<script type="module">
+  const b = document.getElementById('copy-bib');
+  b.addEventListener('click', async () => {
+    await navigator.clipboard.writeText(document.getElementById('bibtex').textContent);
+    b.textContent = 'Citation copied';
+    setTimeout(() => { b.textContent = 'Copy the citation'; }, 2000);
+  });
+</script>
+</body>
+</html>
